@@ -41,6 +41,41 @@ namespace proekt1
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+            /*
+            using (var scope = app.Services.CreateScope())
+            {
+                //suzdava novi roli kato proverqva dali veche ne sushtestvuvat
+                var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+                var roles = new[] { "admin", "employee", "user" };
+                foreach (var role in roles)
+                {
+                    if (!await roleManager.RoleExistsAsync(role))
+                        await roleManager.CreateAsync(new IdentityRole(role));
+                }
+            }
+            //dobavq admin, ako veche nqma
+            using (var scope = app.Services.CreateScope())
+            {
+                var userManager = scope.ServiceProvider.GetRequiredService<UserManager<Client>>();
+
+                string email = "admin@admin.com";
+                string password = "AdminPassword1234$";
+
+                if (await userManager.FindByEmailAsync(email) == null)
+                {
+                    var user = new Person();
+                    user.UserName = email;
+                    user.Email = email;
+                    user.EmailConfirmed = true;
+                    user.FirstName = "Administrator";
+
+                    await userManager.CreateAsync(user, password);
+
+                    await userManager.AddToRoleAsync(user, "admin");
+
+                }
+            }
+            //kraj na pormqnta*/
 
             app.Run();
         }
