@@ -51,6 +51,7 @@ namespace proekt1.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [BindProperty]
+
         public InputModel Input { get; set; }
 
         /// <summary>
@@ -75,6 +76,28 @@ namespace proekt1.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            [Required]
+            [Display(Name = "First Name")]
+            public string FirstName { get; set; }
+
+            [Required]
+            [Display(Name = "Middle Name")]
+            public string MiddleName { get; set; }
+
+            [Required]
+            [Display(Name = "Last Name")]
+            public string LastName { get; set; }
+
+            [Required]
+            [RegularExpression(@"[0-9]{10}")]
+            [StringLength(10, ErrorMessage = "The {0} must be exactly 10 characters long.", MinimumLength = 6)]
+            [Display(Name = "EGN")]
+            public string EGN { get; set; }
+
+            [Required]
+            [Display(Name = "Address")]
+            public string Address { get; set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
@@ -114,10 +137,16 @@ namespace proekt1.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
-
+                user.Address = Input.Address;
+                user.EGN = Input.EGN;
+                user.LastName = Input.LastName;
+                user.MiddleName = Input.MiddleName;
+                user.FirstName = Input.FirstName;
+                user.EmailConfirmed = true;
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
 
                 if (result.Succeeded)
                 {
