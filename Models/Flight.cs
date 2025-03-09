@@ -14,9 +14,11 @@ namespace proekt1.Models
         public string EndLocation { get; set; }
 
         [Required]
+        [DateGreaterThanToday]
         public DateTime StartDateTime { get; set; }
 
         [Required]
+        [DateGreaterThanToday]
         public DateTime EndDateTime { get; set; }
 
         [Required]
@@ -24,5 +26,9 @@ namespace proekt1.Models
 
         [Required]
         public int PlaneID { get; set; }
+
+        [Required]
+        public int FlighteID { get; set; }
+
     }
 }

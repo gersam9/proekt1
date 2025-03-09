@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -10,6 +11,8 @@ using proekt1.Models;
 
 namespace proekt1.Controllers
 {
+    //promqna
+    [Authorize(Roles = "admin,employee")]
     public class FlightsController : Controller
     {
         private readonly proekt1Context _context;
@@ -20,12 +23,15 @@ namespace proekt1.Controllers
         }
 
         // GET: Flights
+        //promqna
+        [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
             return View(await _context.Flight.ToListAsync());
         }
 
         // GET: Flights/Details/5
+        [AllowAnonymous]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -44,6 +50,8 @@ namespace proekt1.Controllers
         }
 
         // GET: Flights/Create
+        //rpomqna
+        [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
             return View();
@@ -54,6 +62,7 @@ namespace proekt1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([Bind("FlightID,StartLocation,EndLocation,StartDateTime,EndDateTime,PilotName,PlaneID")] Flight flight)
         {
             if (ModelState.IsValid)
@@ -66,6 +75,7 @@ namespace proekt1.Controllers
         }
 
         // GET: Flights/Edit/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -86,6 +96,7 @@ namespace proekt1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("FlightID,StartLocation,EndLocation,StartDateTime,EndDateTime,PilotName,PlaneID")] Flight flight)
         {
             if (id != flight.FlightID)
@@ -117,6 +128,7 @@ namespace proekt1.Controllers
         }
 
         // GET: Flights/Delete/5
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -137,6 +149,7 @@ namespace proekt1.Controllers
         // POST: Flights/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var flight = await _context.Flight.FindAsync(id);

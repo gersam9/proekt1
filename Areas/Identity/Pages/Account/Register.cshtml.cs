@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using proekt1.Data;
 using proekt1.Models;
 
 namespace proekt1.Areas.Identity.Pages.Account
@@ -121,6 +122,10 @@ namespace proekt1.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            
+            //promqna
+            [Display(Name = "I am an employee")]
+            public bool Employee { get; set; }
         }
 
 
@@ -146,6 +151,23 @@ namespace proekt1.Areas.Identity.Pages.Account
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+                //promqna
+                if(_userManager.Users.Count() == 1)
+                {
+                    await _userManager.AddToRoleAsync(user, "admin");
+                }
+                else
+                {
+                    if(Input.Employee)
+                    {
+                        await _userManager.AddToRoleAsync(user, "employee");
+                    }
+                    else
+                    {
+                        await _userManager.AddToRoleAsync(user, "user");
+                    }
+                }
+                
 
 
                 if (result.Succeeded)
