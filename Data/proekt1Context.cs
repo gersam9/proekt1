@@ -16,5 +16,7 @@ namespace proekt1.Data
 
         public DbSet<proekt1.Models.Flight> Flight { get; set; } = default!;
         public DbSet<proekt1.Models.Reservation> Reservation { get; set; } = default!;
+
+        public DbSet<proekt1.Models.Plane> Plane { get; set; } = default!;
     }
 }
