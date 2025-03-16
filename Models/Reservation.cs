@@ -31,5 +31,7 @@ namespace proekt1.Models
 
         [Required]
         public string TicketType { get; set; }
+        [Required]
+        public int FlighteID { get; set; }
     }
 }
