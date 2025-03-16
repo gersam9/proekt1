@@ -27,8 +27,7 @@ namespace proekt1.Models
         [Required]
         public int PlaneID { get; set; }
 
-        [Required]
-        public int FlighteID { get; set; }
+        
 
     }
 }
