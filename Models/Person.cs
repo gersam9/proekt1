@@ -15,5 +15,7 @@ namespace proekt1.Models
         public string EGN { get; set; }
         [Required]
         public string Address { get; set; }
+
+        public virtual ICollection<Reservation>? Reservations { get; set; }
     }
 }

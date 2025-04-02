@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Microsoft.AspNetCore.Identity;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace proekt1.Models
 {
@@ -31,7 +33,11 @@ namespace proekt1.Models
 
         [Required]
         public string TicketType { get; set; }
-        [Required]
-        public int FlighteID { get; set; }
+        public int FlightID { get; set; }
+        [ForeignKey("FlightID")]
+        public Flight Flight { get; set; }
+        public string? UserEmail { get; set; }
+        [ForeignKey("Email")]
+        public Person? User { get; set; }
     }
 }

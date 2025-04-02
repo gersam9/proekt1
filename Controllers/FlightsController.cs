@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -65,6 +66,7 @@ namespace proekt1.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([Bind("FlightID,StartLocation,EndLocation,StartDateTime,EndDateTime,PilotName,PlaneID")] Flight flight)
         {
+            flight.Reservations = new List<Reservation>();
             if (ModelState.IsValid)
             {
                 _context.Add(flight);
@@ -165,6 +167,60 @@ namespace proekt1.Controllers
         private bool FlightExists(int id)
         {
             return _context.Flight.Any(e => e.FlightID == id);
+        }
+
+        // GET: Flights/Reserve/5
+        [AllowAnonymous]
+        public async Task<IActionResult> Reserve(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var flight = await _context.Flight.FindAsync(id);
+            if (flight == null)
+            {
+                return NotFound();
+            }
+            return View(flight);
+        }
+
+        // POST: Flights/Reserve/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [AllowAnonymous]
+        public async Task<IActionResult> Reserve(int flightid, [Bind("ReservationID,FirstName,MiddleName,LastName,Email,EGN,Phone,PlaneID,TicketType")] Reservation reservation)
+        {
+            if (flightid != reservation.FlightID)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Add(reservation);
+                    var flight = await _context.Flight.FindAsync(flightid);
+                    flight.Reservations.Add(reservation);
+                    _context.Update(flight);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!FlightExists(reservation.FlightID))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction(nameof(Index));
+            }
+            return View(reservation);
         }
     }
 }
