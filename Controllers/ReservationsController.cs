@@ -44,7 +44,7 @@ namespace proekt1.Controllers
         }
 
         // GET: Reservations/Create
-        public IActionResult Create()
+        public IActionResult Create(int? FlightID)
         {
             return View();
         }
@@ -54,8 +54,13 @@ namespace proekt1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ReservationID,FirstName,MiddleName,LastName,Email,EGN,Phone,PlaneID,TicketType")] Reservation reservation)
+        public async Task<IActionResult> Create([Bind("ReservationID,FirstName,MiddleName,LastName,Email,EGN,Phone,TicketType,FlightID")] Reservation reservation)
         {
+            var flight = await _context.Flight.FirstOrDefaultAsync(x => x.FlightID == reservation.FlightID);
+            //var flight = await _context.Flight.FirstOrDefaultAsync(x => x.FlightID == flightId);
+            reservation.PlaneID = flight.PlaneID;
+            //reservation.FlightID = flightId;
+            //reservation.UserEmail = reservation.Email;
             if (ModelState.IsValid)
             {
                 _context.Add(reservation);
@@ -64,6 +69,7 @@ namespace proekt1.Controllers
             }
             return View(reservation);
         }
+
 
         // GET: Reservations/Edit/5
         public async Task<IActionResult> Edit(string id)

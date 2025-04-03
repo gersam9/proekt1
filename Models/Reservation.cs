@@ -13,7 +13,7 @@ namespace proekt1.Models
         public string FirstName { get; set; }
 
         [Required]
-        public int MiddleName { get; set; }
+        public string MiddleName { get; set; }
 
         [Required]
         public string LastName { get; set; }
@@ -28,14 +28,16 @@ namespace proekt1.Models
         [Required]
         public string Phone { get; set; }
 
-        [Required]
+        [ScaffoldColumn(false)]
         public int PlaneID { get; set; }
 
         [Required]
         public string TicketType { get; set; }
         public int FlightID { get; set; }
         [ForeignKey("FlightID")]
-        public Flight Flight { get; set; }
+        public Flight? Flight { get; set; }
+
+        [ScaffoldColumn(false)]
         public string? UserEmail { get; set; }
         [ForeignKey("Email")]
         public Person? User { get; set; }

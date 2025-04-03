@@ -18,35 +18,35 @@ namespace proekt1.Data
                 }
                 context.Plane.AddRange(
                     new Plane
-                    {
-                        Company = "Wizz",
-                        MaxSeats = 100,
-                        MaxBusinessSeats = 20
-                    },
+                    (
+                        "Wizz",
+                        100,
+                        20
+                    ),
                     new Plane
-                    {
-                        Company = "Wizz",
-                        MaxSeats = 200,
-                        MaxBusinessSeats = 30
-                    },
+                    (
+                        "Wizz",
+                        200,
+                        30
+                    ),
                     new Plane
-                    {
-                        Company = "Rayan",
-                        MaxSeats = 100,
-                        MaxBusinessSeats = 20
-                    },
+                    (
+                        "Rayan",
+                        100,
+                        20
+                    ),
                     new Plane
-                    {
-                        Company = "Wizz",
-                        MaxSeats = 180,
-                        MaxBusinessSeats = 0
-                    },
+                    (
+                        "Wizz",
+                        180,
+                        0
+                    ),
                     new Plane
-                    {
-                        Company = "Delta",
-                        MaxSeats = 16,
-                        MaxBusinessSeats = 108
-                    });
+                    (
+                        "Delta",
+                        16,
+                        108
+                    ));
                 context.SaveChanges();
             }
         }

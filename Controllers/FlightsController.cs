@@ -28,7 +28,19 @@ namespace proekt1.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Flight.ToListAsync());
+            if (User.IsInRole("admin") || User.IsInRole("employee"))
+                return View(await _context.Flight.ToListAsync());
+            else
+            {
+                var availableFlights = await _context.Flight.ToListAsync();
+                foreach(var flight in availableFlights)
+                {
+                    if(flight.Reservations.Count == flight.Plane.MaxSeats)
+                        availableFlights.Remove(flight);
+                }
+                return View(availableFlights);
+            }
+                
         }
 
         // GET: Flights/Details/5
@@ -170,57 +182,42 @@ namespace proekt1.Controllers
         }
 
         // GET: Flights/Reserve/5
-        [AllowAnonymous]
-        public async Task<IActionResult> Reserve(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var flight = await _context.Flight.FindAsync(id);
-            if (flight == null)
-            {
-                return NotFound();
-            }
-            return View(flight);
-        }
+        //[AllowAnonymous]
+        //public async Task<IActionResult> Reserve(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    var flight = await _context.Flight
+        //        .FirstOrDefaultAsync(m => m.FlightID == id);
+        //    if (flight == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    //return View(flight);
+        //    return RedirectToAction("Create", "Reservations", new { flightId = id });
+        //}
 
         // POST: Flights/Reserve/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [AllowAnonymous]
-        public async Task<IActionResult> Reserve(int flightid, [Bind("ReservationID,FirstName,MiddleName,LastName,Email,EGN,Phone,PlaneID,TicketType")] Reservation reservation)
-        {
-            if (flightid != reservation.FlightID)
-            {
-                return NotFound();
-            }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[AllowAnonymous]
+        //public async Task<IActionResult> Reserve(int id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Add(reservation);
-                    var flight = await _context.Flight.FindAsync(flightid);
-                    flight.Reservations.Add(reservation);
-                    _context.Update(flight);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!FlightExists(reservation.FlightID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            return View(reservation);
-        }
+        //    var flight = await _context.Flight
+        //        .FirstOrDefaultAsync(m => m.FlightID == id);
+        //    if (flight == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    return RedirectToAction("Create", "Reservations", new {flightId = id});
+        //}
     }
 }
