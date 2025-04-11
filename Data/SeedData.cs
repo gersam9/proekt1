@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using proekt1.Models;
 
+
 namespace proekt1.Data
 {
     public class SeedData
@@ -47,7 +48,14 @@ namespace proekt1.Data
                         MaxSeats = 16,
                         MaxBusinessSeats = 108
                     });
+
+                if(context.Flight.First(x => x.StartLocation == "London" && x.EndLocation == "Sofia" && x.StartDateTime == new DateTime(2025, 6, 18, 10, 30, 0) &&
+                        x.EndDateTime == new DateTime(2025, 6, 18, 14, 0, 0) && x.PilotName == "Asen" && x.PlaneID == 1) == null)
+                {
+                    return;
+                }
                 context.Flight.AddRange
+
                     (new Flight
                     {
                         StartLocation = "London",

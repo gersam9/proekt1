@@ -28,7 +28,7 @@
                 @Html.DisplayNameFor(model => model.PilotName)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.PlaneID)
+                @Html.DisplayNameFor(model => model.Plane)
             </th>
             <th></th>
         </tr>
@@ -52,12 +52,14 @@
                 @Html.DisplayFor(modelItem => item.PilotName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.PlaneID)
+                @Html.DisplayFor(modelItem => item.Plane.PlaneID)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.FlightID">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.FlightID">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.FlightID">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.FlightID">Delete</a> |
+                    @* promqna *@
+                    <a asp-area="" asp-controller="Reservations" asp-action="Create" asp-route-FlightID="@item.FlightID">Reserve</a>
             </td>
         </tr>
 }

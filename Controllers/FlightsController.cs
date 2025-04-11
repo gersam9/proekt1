@@ -23,11 +23,31 @@ namespace proekt1.Controllers
         }
 
         // GET: Flights
-        //promqna
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Flight.ToListAsync());
+            if(User.IsInRole("admin") || User.IsInRole("emoloyee"))
+            {
+                var proekt1Context = _context.Flight.Include(f => f.Plane);
+                return View(await proekt1Context.ToListAsync());
+            }
+            else
+            {
+                var proekt1Context = _context.Flight.Include(f => f.Plane);
+                var availableFlights = new List<Flight>();
+                foreach(var flight in proekt1Context)
+                {
+                    if(flight.Reservations != null)
+                    {
+                        if(flight.Reservations.Count != flight.Plane.MaxSeats + flight.Plane.MaxBusinessSeats)
+                        {
+                            availableFlights.Add(flight);
+                        }
+                    }
+                }
+                return View(availableFlights);
+            }
+            
         }
 
         // GET: Flights/Details/5
@@ -40,6 +60,7 @@ namespace proekt1.Controllers
             }
 
             var flight = await _context.Flight
+                .Include(f => f.Plane)
                 .FirstOrDefaultAsync(m => m.FlightID == id);
             if (flight == null)
             {
@@ -50,10 +71,10 @@ namespace proekt1.Controllers
         }
 
         // GET: Flights/Create
-        //rpomqna
         [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
+            ViewData["PlaneID"] = new SelectList(_context.Plane, "PlaneID", "PlaneID");
             return View();
         }
 
@@ -71,11 +92,11 @@ namespace proekt1.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["PlaneID"] = new SelectList(_context.Plane, "PlaneID", "PlaneID", flight.PlaneID);
             return View(flight);
         }
 
         // GET: Flights/Edit/5
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -88,6 +109,7 @@ namespace proekt1.Controllers
             {
                 return NotFound();
             }
+            ViewData["PlaneID"] = new SelectList(_context.Plane, "PlaneID", "PlaneID", flight.PlaneID);
             return View(flight);
         }
 
@@ -96,7 +118,6 @@ namespace proekt1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("FlightID,StartLocation,EndLocation,StartDateTime,EndDateTime,PilotName,PlaneID")] Flight flight)
         {
             if (id != flight.FlightID)
@@ -124,6 +145,7 @@ namespace proekt1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["PlaneID"] = new SelectList(_context.Plane, "PlaneID", "PlaneID", flight.PlaneID);
             return View(flight);
         }
 
@@ -137,6 +159,7 @@ namespace proekt1.Controllers
             }
 
             var flight = await _context.Flight
+                .Include(f => f.Plane)
                 .FirstOrDefaultAsync(m => m.FlightID == id);
             if (flight == null)
             {
