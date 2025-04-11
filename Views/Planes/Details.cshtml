@@ -10,32 +10,27 @@
     <h4>Plane</h4>
     <hr />
     <dl class="row">
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Company)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.Company)
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.MaxSeats)
         </dt>
-        <dd class="col-sm-10">
+        <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.MaxSeats)
         </dd>
-        <dt class="col-sm-2">
+        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.MaxBusinessSeats)
         </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.MaxBusinessSeats)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.PlaneID)
-        </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.PlaneID)
+            @Html.DisplayFor(model => model.MaxBusinessSeats)
         </dd>
     </dl>
 </div>
 <div>
+    <a asp-action="Edit" asp-route-id="@Model?.PlaneID">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>

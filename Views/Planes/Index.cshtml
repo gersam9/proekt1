@@ -6,12 +6,12 @@
 
 <h1>Index</h1>
 
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
 <table class="table">
     <thead>
         <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.PlaneID)
-            </th>
             <th>
                 @Html.DisplayNameFor(model => model.Company)
             </th>
@@ -28,9 +28,6 @@
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.PlaneID)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.Company)
             </td>
             <td>
@@ -40,7 +37,9 @@
                 @Html.DisplayFor(modelItem => item.MaxBusinessSeats)
             </td>
             <td>
-                <a asp-action="Details" asp-route-id="@item.PlaneID">Details</a>
+                <a asp-action="Edit" asp-route-id="@item.PlaneID">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.PlaneID">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.PlaneID">Delete</a>
             </td>
         </tr>
 }

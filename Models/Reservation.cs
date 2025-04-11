@@ -7,7 +7,7 @@ namespace proekt1.Models
     public class Reservation
     {
         [Key]
-        public string ReservationID { get; set; }
+        public int ReservationID { get; set; }
 
         [Required]
         public string FirstName { get; set; }

@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace proekt1.Migrations.Person
 {
     /// <inheritdoc />
-    public partial class First : Migration
+    public partial class ReaddedIdentity : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -31,7 +31,7 @@ namespace proekt1.Migrations.Person
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    MiddleName = table.Column<int>(type: "int", nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     EGN = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -53,6 +53,21 @@ namespace proekt1.Migrations.Person
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Plane",
+                columns: table => new
+                {
+                    PlaneID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Company = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MaxSeats = table.Column<int>(type: "int", nullable: false),
+                    MaxBusinessSeats = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Plane", x => x.PlaneID);
                 });
 
             migrationBuilder.CreateTable(
@@ -161,6 +176,64 @@ namespace proekt1.Migrations.Person
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Flight",
+                columns: table => new
+                {
+                    FlightID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    StartLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    EndLocation = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    StartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    EndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PilotName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PlaneID = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Flight", x => x.FlightID);
+                    table.ForeignKey(
+                        name: "FK_Flight_Plane_PlaneID",
+                        column: x => x.PlaneID,
+                        principalTable: "Plane",
+                        principalColumn: "PlaneID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Reservation",
+                columns: table => new
+                {
+                    ReservationID = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FirstName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    MiddleName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    LastName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    EGN = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PlaneID = table.Column<int>(type: "int", nullable: false),
+                    TicketType = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FlightID = table.Column<int>(type: "int", nullable: false),
+                    UserEmail = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Reservation", x => x.ReservationID);
+                    table.ForeignKey(
+                        name: "FK_Reservation_AspNetUsers_Email",
+                        column: x => x.Email,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Reservation_Flight_FlightID",
+                        column: x => x.FlightID,
+                        principalTable: "Flight",
+                        principalColumn: "FlightID",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -199,6 +272,21 @@ namespace proekt1.Migrations.Person
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Flight_PlaneID",
+                table: "Flight",
+                column: "PlaneID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservation_Email",
+                table: "Reservation",
+                column: "Email");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Reservation_FlightID",
+                table: "Reservation",
+                column: "FlightID");
         }
 
         /// <inheritdoc />
@@ -220,10 +308,19 @@ namespace proekt1.Migrations.Person
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "Reservation");
+
+            migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");
+
+            migrationBuilder.DropTable(
+                name: "Flight");
+
+            migrationBuilder.DropTable(
+                name: "Plane");
         }
     }
 }

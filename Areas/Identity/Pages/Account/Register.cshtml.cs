@@ -18,7 +18,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
-using proekt1.Data;
 using proekt1.Models;
 
 namespace proekt1.Areas.Identity.Pages.Account
@@ -52,7 +51,6 @@ namespace proekt1.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         [BindProperty]
-
         public InputModel Input { get; set; }
 
         /// <summary>
@@ -77,6 +75,7 @@ namespace proekt1.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+
             [Required]
             [Display(Name = "First Name")]
             public string FirstName { get; set; }
@@ -104,6 +103,10 @@ namespace proekt1.Areas.Identity.Pages.Account
             [Display(Name = "Email")]
             public string Email { get; set; }
 
+            //promqna
+            [Display(Name = "I am an employee")]
+            public bool Employee { get; set; }
+
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -122,10 +125,7 @@ namespace proekt1.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
-            
-            //promqna
-            [Display(Name = "I am an employee")]
-            public bool Employee { get; set; }
+
         }
 
 
@@ -142,23 +142,26 @@ namespace proekt1.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+
                 user.Address = Input.Address;
                 user.EGN = Input.EGN;
                 user.LastName = Input.LastName;
                 user.MiddleName = Input.MiddleName;
                 user.FirstName = Input.FirstName;
                 user.EmailConfirmed = true;
+
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
                 var result = await _userManager.CreateAsync(user, Input.Password);
+
                 //promqna
-                if(_userManager.Users.Count() == 1)
+                if (_userManager.Users.Count() == 1)
                 {
                     await _userManager.AddToRoleAsync(user, "admin");
                 }
                 else
                 {
-                    if(Input.Employee)
+                    if (Input.Employee)
                     {
                         await _userManager.AddToRoleAsync(user, "employee");
                     }
@@ -167,8 +170,6 @@ namespace proekt1.Areas.Identity.Pages.Account
                         await _userManager.AddToRoleAsync(user, "user");
                     }
                 }
-                
-
 
                 if (result.Succeeded)
                 {

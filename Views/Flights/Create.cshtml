@@ -38,16 +38,8 @@
                 <span asp-validation-for="PilotName" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <!--promqna-->
                 <label asp-for="PlaneID" class="control-label"></label>
-                <select asp-for="PlaneID">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                <span asp-validation-for="PlaneID" class="text-danger"></span>
+                <select asp-for="PlaneID" class ="form-control" asp-items="ViewBag.PlaneID"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />

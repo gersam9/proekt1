@@ -41,7 +41,7 @@ namespace proekt1.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PlaneID")
+                    b.Property<int>("PlaneID")
                         .HasColumnType("int");
 
                     b.Property<DateTime>("StartDateTime")
@@ -155,8 +155,11 @@ namespace proekt1.Migrations
 
             modelBuilder.Entity("proekt1.Models.Reservation", b =>
                 {
-                    b.Property<string>("ReservationID")
-                        .HasColumnType("nvarchar(450)");
+                    b.Property<int>("ReservationID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationID"));
 
                     b.Property<string>("EGN")
                         .IsRequired()
@@ -209,7 +212,9 @@ namespace proekt1.Migrations
                 {
                     b.HasOne("proekt1.Models.Plane", "Plane")
                         .WithMany("Flights")
-                        .HasForeignKey("PlaneID");
+                        .HasForeignKey("PlaneID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Plane");
                 });

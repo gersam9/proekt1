@@ -12,8 +12,8 @@ using proekt1.Data;
 namespace proekt1.Migrations.Person
 {
     [DbContext(typeof(PersonContext))]
-    [Migration("20250302094053_First")]
-    partial class First
+    [Migration("20250406095334_ReaddedIdentity")]
+    partial class ReaddedIdentity
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -162,6 +162,42 @@ namespace proekt1.Migrations.Person
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("proekt1.Models.Flight", b =>
+                {
+                    b.Property<int>("FlightID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("FlightID"));
+
+                    b.Property<DateTime>("EndDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("EndLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PilotName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlaneID")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("StartDateTime")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StartLocation")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("FlightID");
+
+                    b.HasIndex("PlaneID");
+
+                    b.ToTable("Flight");
+                });
+
             modelBuilder.Entity("proekt1.Models.Person", b =>
                 {
                     b.Property<string>("Id")
@@ -203,8 +239,9 @@ namespace proekt1.Migrations.Person
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("datetimeoffset");
 
-                    b.Property<int>("MiddleName")
-                        .HasColumnType("int");
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -244,6 +281,84 @@ namespace proekt1.Migrations.Person
                         .HasFilter("[NormalizedUserName] IS NOT NULL");
 
                     b.ToTable("AspNetUsers", (string)null);
+                });
+
+            modelBuilder.Entity("proekt1.Models.Plane", b =>
+                {
+                    b.Property<int>("PlaneID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PlaneID"));
+
+                    b.Property<string>("Company")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MaxBusinessSeats")
+                        .HasColumnType("int");
+
+                    b.Property<int>("MaxSeats")
+                        .HasColumnType("int");
+
+                    b.HasKey("PlaneID");
+
+                    b.ToTable("Plane");
+                });
+
+            modelBuilder.Entity("proekt1.Models.Reservation", b =>
+                {
+                    b.Property<int>("ReservationID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReservationID"));
+
+                    b.Property<string>("EGN")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("FirstName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FlightID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("MiddleName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("PlaneID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("TicketType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserEmail")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ReservationID");
+
+                    b.HasIndex("Email");
+
+                    b.HasIndex("FlightID");
+
+                    b.ToTable("Reservation");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -295,6 +410,51 @@ namespace proekt1.Migrations.Person
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("proekt1.Models.Flight", b =>
+                {
+                    b.HasOne("proekt1.Models.Plane", "Plane")
+                        .WithMany("Flights")
+                        .HasForeignKey("PlaneID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Plane");
+                });
+
+            modelBuilder.Entity("proekt1.Models.Reservation", b =>
+                {
+                    b.HasOne("proekt1.Models.Person", "User")
+                        .WithMany("Reservations")
+                        .HasForeignKey("Email")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("proekt1.Models.Flight", "Flight")
+                        .WithMany("Reservations")
+                        .HasForeignKey("FlightID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Flight");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("proekt1.Models.Flight", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("proekt1.Models.Person", b =>
+                {
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("proekt1.Models.Plane", b =>
+                {
+                    b.Navigation("Flights");
                 });
 #pragma warning restore 612, 618
         }

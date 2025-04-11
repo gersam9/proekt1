@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -24,23 +23,31 @@ namespace proekt1.Controllers
         }
 
         // GET: Flights
-        //promqna
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            if (User.IsInRole("admin") || User.IsInRole("employee"))
-                return View(await _context.Flight.ToListAsync());
+            if(User.IsInRole("admin") || User.IsInRole("emoloyee"))
+            {
+                var proekt1Context = _context.Flight.Include(f => f.Plane);
+                return View(await proekt1Context.ToListAsync());
+            }
             else
             {
-                var availableFlights = await _context.Flight.ToListAsync();
-                foreach(var flight in availableFlights)
+                var proekt1Context = _context.Flight.Include(f => f.Plane);
+                var availableFlights = new List<Flight>();
+                foreach(var flight in proekt1Context)
                 {
-                    if(flight.Reservations.Count == flight.Plane.MaxSeats)
-                        availableFlights.Remove(flight);
+                    if(flight.Reservations != null)
+                    {
+                        if(flight.Reservations.Count != flight.Plane.MaxSeats + flight.Plane.MaxBusinessSeats)
+                        {
+                            availableFlights.Add(flight);
+                        }
+                    }
                 }
                 return View(availableFlights);
             }
-                
+            
         }
 
         // GET: Flights/Details/5
@@ -53,6 +60,7 @@ namespace proekt1.Controllers
             }
 
             var flight = await _context.Flight
+                .Include(f => f.Plane)
                 .FirstOrDefaultAsync(m => m.FlightID == id);
             if (flight == null)
             {
@@ -63,10 +71,10 @@ namespace proekt1.Controllers
         }
 
         // GET: Flights/Create
-        //rpomqna
         [Authorize(Roles = "admin")]
         public IActionResult Create()
         {
+            ViewData["PlaneID"] = new SelectList(_context.Plane, "PlaneID", "PlaneID");
             return View();
         }
 
@@ -78,18 +86,17 @@ namespace proekt1.Controllers
         [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create([Bind("FlightID,StartLocation,EndLocation,StartDateTime,EndDateTime,PilotName,PlaneID")] Flight flight)
         {
-            flight.Reservations = new List<Reservation>();
             if (ModelState.IsValid)
             {
                 _context.Add(flight);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["PlaneID"] = new SelectList(_context.Plane, "PlaneID", "PlaneID", flight.PlaneID);
             return View(flight);
         }
 
         // GET: Flights/Edit/5
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -102,6 +109,7 @@ namespace proekt1.Controllers
             {
                 return NotFound();
             }
+            ViewData["PlaneID"] = new SelectList(_context.Plane, "PlaneID", "PlaneID", flight.PlaneID);
             return View(flight);
         }
 
@@ -110,7 +118,6 @@ namespace proekt1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "admin")]
         public async Task<IActionResult> Edit(int id, [Bind("FlightID,StartLocation,EndLocation,StartDateTime,EndDateTime,PilotName,PlaneID")] Flight flight)
         {
             if (id != flight.FlightID)
@@ -138,6 +145,7 @@ namespace proekt1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["PlaneID"] = new SelectList(_context.Plane, "PlaneID", "PlaneID", flight.PlaneID);
             return View(flight);
         }
 
@@ -151,6 +159,7 @@ namespace proekt1.Controllers
             }
 
             var flight = await _context.Flight
+                .Include(f => f.Plane)
                 .FirstOrDefaultAsync(m => m.FlightID == id);
             if (flight == null)
             {
@@ -180,44 +189,5 @@ namespace proekt1.Controllers
         {
             return _context.Flight.Any(e => e.FlightID == id);
         }
-
-        // GET: Flights/Reserve/5
-        //[AllowAnonymous]
-        //public async Task<IActionResult> Reserve(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    var flight = await _context.Flight
-        //        .FirstOrDefaultAsync(m => m.FlightID == id);
-        //    if (flight == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    //return View(flight);
-        //    return RedirectToAction("Create", "Reservations", new { flightId = id });
-        //}
-
-        // POST: Flights/Reserve/5
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //[AllowAnonymous]
-        //public async Task<IActionResult> Reserve(int id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var flight = await _context.Flight
-        //        .FirstOrDefaultAsync(m => m.FlightID == id);
-        //    if (flight == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    return RedirectToAction("Create", "Reservations", new {flightId = id});
-        //}
     }
 }

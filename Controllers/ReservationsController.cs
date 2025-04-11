@@ -22,11 +22,12 @@ namespace proekt1.Controllers
         // GET: Reservations
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Reservation.ToListAsync());
+            var proekt1Context = _context.Reservation.Include(r => r.Flight).Include(r => r.User);
+            return View(await proekt1Context.ToListAsync());
         }
 
         // GET: Reservations/Details/5
-        public async Task<IActionResult> Details(string id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
@@ -34,6 +35,8 @@ namespace proekt1.Controllers
             }
 
             var reservation = await _context.Reservation
+                .Include(r => r.Flight)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.ReservationID == id);
             if (reservation == null)
             {
@@ -46,6 +49,8 @@ namespace proekt1.Controllers
         // GET: Reservations/Create
         public IActionResult Create(int? FlightID)
         {
+            ViewData["FlightID"] = new SelectList(_context.Flight, "FlightID", "EndLocation");
+            ViewData["UserEmail"] = new SelectList(_context.Set<Person>(), "Id", "Id");
             return View();
         }
 
@@ -57,22 +62,20 @@ namespace proekt1.Controllers
         public async Task<IActionResult> Create([Bind("ReservationID,FirstName,MiddleName,LastName,Email,EGN,Phone,TicketType,FlightID")] Reservation reservation)
         {
             var flight = await _context.Flight.FirstOrDefaultAsync(x => x.FlightID == reservation.FlightID);
-            //var flight = await _context.Flight.FirstOrDefaultAsync(x => x.FlightID == flightId);
             reservation.PlaneID = flight.PlaneID;
-            //reservation.FlightID = flightId;
-            //reservation.UserEmail = reservation.Email;
             if (ModelState.IsValid)
             {
                 _context.Add(reservation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FlightID"] = new SelectList(_context.Flight, "FlightID", "EndLocation", reservation.FlightID);
+            ViewData["UserEmail"] = new SelectList(_context.Set<Person>(), "Id", "Id", reservation.UserEmail);
             return View(reservation);
         }
 
-
         // GET: Reservations/Edit/5
-        public async Task<IActionResult> Edit(string id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -84,6 +87,8 @@ namespace proekt1.Controllers
             {
                 return NotFound();
             }
+            ViewData["FlightID"] = new SelectList(_context.Flight, "FlightID", "EndLocation", reservation.FlightID);
+            ViewData["UserEmail"] = new SelectList(_context.Set<Person>(), "Id", "Id", reservation.UserEmail);
             return View(reservation);
         }
 
@@ -92,7 +97,7 @@ namespace proekt1.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("ReservationID,FirstName,MiddleName,LastName,Email,EGN,Phone,PlaneID,TicketType")] Reservation reservation)
+        public async Task<IActionResult> Edit(int id, [Bind("ReservationID,FirstName,MiddleName,LastName,Email,EGN,Phone,TicketType,FlightID")] Reservation reservation)
         {
             if (id != reservation.ReservationID)
             {
@@ -119,11 +124,13 @@ namespace proekt1.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
+            ViewData["FlightID"] = new SelectList(_context.Flight, "FlightID", "EndLocation", reservation.FlightID);
+            ViewData["UserEmail"] = new SelectList(_context.Set<Person>(), "Id", "Id", reservation.UserEmail);
             return View(reservation);
         }
 
         // GET: Reservations/Delete/5
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
@@ -131,6 +138,8 @@ namespace proekt1.Controllers
             }
 
             var reservation = await _context.Reservation
+                .Include(r => r.Flight)
+                .Include(r => r.User)
                 .FirstOrDefaultAsync(m => m.ReservationID == id);
             if (reservation == null)
             {
@@ -143,7 +152,7 @@ namespace proekt1.Controllers
         // POST: Reservations/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var reservation = await _context.Reservation.FindAsync(id);
             if (reservation != null)
@@ -155,7 +164,7 @@ namespace proekt1.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ReservationExists(string id)
+        private bool ReservationExists(int id)
         {
             return _context.Reservation.Any(e => e.ReservationID == id);
         }
