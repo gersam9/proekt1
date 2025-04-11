@@ -28,8 +28,8 @@ namespace proekt1.Models
         public int PlaneID { get; set; }
         [ForeignKey("PlaneID")]
         public Plane? Plane { get; set; }
-
         public virtual ICollection<Reservation>? Reservations { get; set; }
+
 
         
       
