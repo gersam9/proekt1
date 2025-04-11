@@ -148,7 +148,7 @@ namespace proekt1.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 user.MiddleName = Input.MiddleName;
                 user.FirstName = Input.FirstName;
-                user.EmailConfirmed = true;
+                //user.EmailConfirmed = true;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);

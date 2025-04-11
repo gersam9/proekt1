@@ -3,6 +3,8 @@ using Microsoft.Extensions.DependencyInjection;
 using proekt1.Data;
 using Microsoft.AspNetCore.Identity;
 using proekt1.Models;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using proekt1.Services;
 namespace proekt1
 {
     public class Program
@@ -20,6 +22,10 @@ namespace proekt1
 
             // Add services to the container.
             builder.Services.AddControllersWithViews();
+
+            //promqna
+            builder.Services.AddTransient<IEmailSender, EmailSender>();
+            builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
 
             var app = builder.Build();
 
