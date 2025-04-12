@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.DotNet.Scaffolding.Shared.Messaging;
 using Microsoft.EntityFrameworkCore;
 using proekt1.Data;
 using proekt1.Models;
@@ -26,27 +27,27 @@ namespace proekt1.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Index()
         {
-            if(User.IsInRole("admin") || User.IsInRole("emoloyee"))
-            {
+            //if(User.IsInRole("admin") || User.IsInRole("emoloyee"))
+            //{
                 var proekt1Context = _context.Flight.Include(f => f.Plane);
                 return View(await proekt1Context.ToListAsync());
-            }
-            else
-            {
-                var proekt1Context = _context.Flight.Include(f => f.Plane);
-                var availableFlights = new List<Flight>();
-                foreach(var flight in proekt1Context)
-                {
-                    if(flight.Reservations != null)
-                    {
-                        if(flight.Reservations.Count != flight.Plane.MaxSeats + flight.Plane.MaxBusinessSeats)
-                        {
-                            availableFlights.Add(flight);
-                        }
-                    }
-                }
-                return View(availableFlights);
-            }
+            //}
+            //else
+            //{
+            //    var proekt1Context = _context.Flight.Include(f => f.Plane);
+            //    var availableFlights = new List<Flight>();
+            //    foreach(var flight in proekt1Context)
+            //    {
+            //        if(flight.Reservations.Count != 0)
+            //        {
+            //            if(flight.Reservations.Count != flight.Plane.MaxSeats + flight.Plane.MaxBusinessSeats)
+            //            {
+            //                availableFlights.Add(flight);
+            //            }
+            //        }
+            //    }
+            //    return View(availableFlights);
+            //}
             
         }
 
@@ -61,6 +62,7 @@ namespace proekt1.Controllers
 
             var flight = await _context.Flight
                 .Include(f => f.Plane)
+                .Include(r => r.Reservations)
                 .FirstOrDefaultAsync(m => m.FlightID == id);
             if (flight == null)
             {
@@ -184,7 +186,7 @@ namespace proekt1.Controllers
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
-
+        
         private bool FlightExists(int id)
         {
             return _context.Flight.Any(e => e.FlightID == id);

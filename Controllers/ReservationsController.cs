@@ -66,6 +66,7 @@ namespace proekt1.Controllers
             if (ModelState.IsValid)
             {
                 _context.Add(reservation);
+                //AddReservation(flight.FlightID, reservation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -73,6 +74,18 @@ namespace proekt1.Controllers
             ViewData["UserEmail"] = new SelectList(_context.Set<Person>(), "Id", "Id", reservation.UserEmail);
             return View(reservation);
         }
+        //promqna
+        //public async Task AddReservation(int flightid, Reservation reservation)
+        //{
+        //    var flight = await _context.Flight.FindAsync(flightid);
+        //    if (flight != null)
+        //    {
+        //        if (flight.Reservations == null)
+        //            flight.Reservations = new List<Reservation>();
+        //        flight.Reservations.Add(reservation);
+        //    }
+            
+        //}
 
         // GET: Reservations/Edit/5
         public async Task<IActionResult> Edit(int? id)

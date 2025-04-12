@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@model IEnumerable<Person>
+
+<h3>Users</h3>
+<table class="table">
+    <thead>
+        <tr>
+            <th>First Name</th>
+            <th>Middle Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>EGN</th>
+            <th>Address</th>
+            <th>Hashed Password</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @item.FirstName
+                </td>
+                <td>
+                    @item.MiddleName
+                </td>
+                <td>
+                    @item.LastName
+                </td>
+                <td>
+                    @item.Email
+                </td>
+                <td>
+                    @item.EGN
+                </td>
+                <td>
+                    @item.Address
+                </td>
+                <td>
+                    @item.PasswordHash
+                </td>
+                <td>
+                    <form asp-action="Delete" method="post" asp-route-id="@item.Id">
+                        <button type="submit" class="btn-danger">Delete</button>
+                    </form>
+                </td>
+                
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}

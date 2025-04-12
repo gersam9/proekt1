@@ -41,5 +41,7 @@ namespace proekt1.Models
         public string? UserEmail { get; set; }
         [ForeignKey("Email")]
         public Person? User { get; set; }
+
+
     }
 }
