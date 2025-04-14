@@ -148,7 +148,7 @@ namespace proekt1.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 user.MiddleName = Input.MiddleName;
                 user.FirstName = Input.FirstName;
-                user.EmailConfirmed = true;
+                //user.EmailConfirmed = true;
                 //if(Input.Email == "1@gmail.com")
                 //{
                 //    user.EmailConfirmed = true;
