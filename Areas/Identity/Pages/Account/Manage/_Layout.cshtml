@@ -1,4 +1,9 @@
-﻿@{
+﻿<style>
+    body {
+        background-color: #fff1d5;
+    }
+</style>
+@{
     if (ViewData.TryGetValue("ParentLayout", out var parentLayout) && parentLayout !=  null)
     {
         Layout = parentLayout.ToString();
