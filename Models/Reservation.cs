@@ -39,9 +39,11 @@ namespace proekt1.Models
 
         [ScaffoldColumn(false)]
         public string? UserEmail { get; set; }
+        [ScaffoldColumn(false)]
         [ForeignKey("Email")]
         public Person? User { get; set; }
-
-
+        
+        
+        public bool ReservationConfirmed = false;
     }
 }

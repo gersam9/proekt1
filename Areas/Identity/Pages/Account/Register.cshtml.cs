@@ -148,7 +148,7 @@ namespace proekt1.Areas.Identity.Pages.Account
                 user.LastName = Input.LastName;
                 user.MiddleName = Input.MiddleName;
                 user.FirstName = Input.FirstName;
-                //user.EmailConfirmed = true;
+                user.EmailConfirmed = true;
                 //if(Input.Email == "1@gmail.com")
                 //{
                 //    user.EmailConfirmed = true;
@@ -188,7 +188,7 @@ namespace proekt1.Areas.Identity.Pages.Account
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
                     var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
+                        "ConfirmEmail",
                         pageHandler: null,
                         values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
                         protocol: Request.Scheme);

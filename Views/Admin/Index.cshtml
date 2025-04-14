@@ -6,6 +6,15 @@
 </style>
 @model IEnumerable<Person>
 
+@using (Html.BeginForm("Index", "Admin", FormMethod.Get))
+{
+    <form>
+        <input type="text" name="searchTerm" style="width: 70%; height:40px;" placeholder="Search notes..." value="@ViewData["SearchTerm"]" />
+        <button type="submit" class="btn btn-primary ">Search</button>
+    </form>
+
+}
+
 <h3>Users</h3>
 <table class="table">
     <thead>

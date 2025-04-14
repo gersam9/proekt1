@@ -97,6 +97,15 @@ namespace proekt1.Data
                                 EndDateTime = new DateTime(2025, 6, 19, 14, 0, 0),
                                 PilotName = "Teodor",
                                 PlaneID = context.Plane.FirstOrDefault(x => x.MaxSeats == 100).PlaneID
+                            },
+                            new Flight
+                            {
+                                StartLocation = "Viena",
+                                EndLocation = "Sofia",
+                                StartDateTime = new DateTime(2025, 3, 19, 9, 30, 0),
+                                EndDateTime = new DateTime(2025, 3, 19, 14, 0, 0),
+                                PilotName = "Teodor",
+                                PlaneID = context.Plane.FirstOrDefault(x => x.MaxSeats == 100).PlaneID
                             });
                     context.SaveChanges();
                 }

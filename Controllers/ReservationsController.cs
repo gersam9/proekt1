@@ -7,16 +7,28 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using proekt1.Data;
 using proekt1.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.WebUtilities;
+using System.Text.Encodings.Web;
+using System.Text;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using RestSharp;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace proekt1.Controllers
 {
+    //[Authorize(Roles ="admin,employee")]
     public class ReservationsController : Controller
     {
         private readonly proekt1Context _context;
+        private readonly IEmailSender _emailSender;
 
-        public ReservationsController(proekt1Context context)
+        public ReservationsController(proekt1Context context, IEmailSender emailSender)
         {
             _context = context;
+            _emailSender = emailSender;
         }
 
         // GET: Reservations
@@ -47,6 +59,8 @@ namespace proekt1.Controllers
         }
 
         // GET: Reservations/Create
+
+        //[AllowAnonymous]
         public IActionResult Create(int? FlightID)
         {
             ViewData["FlightID"] = new SelectList(_context.Flight, "FlightID", "EndLocation");
@@ -68,24 +82,14 @@ namespace proekt1.Controllers
                 _context.Add(reservation);
                 //AddReservation(flight.FlightID, reservation);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
             ViewData["FlightID"] = new SelectList(_context.Flight, "FlightID", "EndLocation", reservation.FlightID);
             ViewData["UserEmail"] = new SelectList(_context.Set<Person>(), "Id", "Id", reservation.UserEmail);
+
             return View(reservation);
         }
-        //promqna
-        //public async Task AddReservation(int flightid, Reservation reservation)
-        //{
-        //    var flight = await _context.Flight.FindAsync(flightid);
-        //    if (flight != null)
-        //    {
-        //        if (flight.Reservations == null)
-        //            flight.Reservations = new List<Reservation>();
-        //        flight.Reservations.Add(reservation);
-        //    }
-            
-        //}
+        
 
         // GET: Reservations/Edit/5
         public async Task<IActionResult> Edit(int? id)

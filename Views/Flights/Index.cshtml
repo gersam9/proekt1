@@ -7,6 +7,14 @@
 @{
     ViewData["Title"] = "Index";
 }
+@using (Html.BeginForm("Index", "Flights", FormMethod.Get))
+{
+    <form>
+        <input type="text" name="searchTerm" style="width: 70%; height:40px;" placeholder="Search notes..." value="@ViewData["SearchTerm"]" />
+        <button type="submit" class="btn btn-primary ">Search</button>
+    </form>
+
+}
 
 @if(User.IsInRole("admin"))
 {
