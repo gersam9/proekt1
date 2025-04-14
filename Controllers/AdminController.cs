@@ -16,9 +16,16 @@ namespace proekt1.Controllers
             this.userManager = userManager;
         }
         // GET: AdminController
-        public ActionResult Index()
+        public ActionResult Index(string searchTerm)
         {
-            var users = userManager.Users.ToList();
+            var users = from n in userManager.Users select n; // Get all notes
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                users = users.Where(n => n.Email.Contains(searchTerm) || n.FirstName.Contains(searchTerm) || n.LastName.Contains(searchTerm));
+            }
+            ViewData["SearchTerm"] = searchTerm;
+            //var users = userManager.Users.ToList();
             return View(users);
         }
 

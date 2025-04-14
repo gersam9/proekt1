@@ -12,8 +12,8 @@ using proekt1.Data;
 namespace proekt1.Migrations
 {
     [DbContext(typeof(proekt1Context))]
-    [Migration("20250406085138_RenewDatabase")]
-    partial class RenewDatabase
+    [Migration("20250414131650_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

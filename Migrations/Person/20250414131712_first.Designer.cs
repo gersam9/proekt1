@@ -12,8 +12,8 @@ using proekt1.Data;
 namespace proekt1.Migrations.Person
 {
     [DbContext(typeof(PersonContext))]
-    [Migration("20250406095334_ReaddedIdentity")]
-    partial class ReaddedIdentity
+    [Migration("20250414131712_first")]
+    partial class first
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

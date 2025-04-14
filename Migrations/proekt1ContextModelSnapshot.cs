@@ -55,7 +55,7 @@ namespace proekt1.Migrations
 
                     b.HasIndex("PlaneID");
 
-                    b.ToTable("Flight");
+                    b.ToTable("Flight", (string)null);
                 });
 
             modelBuilder.Entity("proekt1.Models.Person", b =>
@@ -127,7 +127,7 @@ namespace proekt1.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Person");
+                    b.ToTable("Person", (string)null);
                 });
 
             modelBuilder.Entity("proekt1.Models.Plane", b =>
@@ -150,7 +150,7 @@ namespace proekt1.Migrations
 
                     b.HasKey("PlaneID");
 
-                    b.ToTable("Plane");
+                    b.ToTable("Plane", (string)null);
                 });
 
             modelBuilder.Entity("proekt1.Models.Reservation", b =>
@@ -205,7 +205,7 @@ namespace proekt1.Migrations
 
                     b.HasIndex("UserEmail");
 
-                    b.ToTable("Reservation");
+                    b.ToTable("Reservation", (string)null);
                 });
 
             modelBuilder.Entity("proekt1.Models.Flight", b =>

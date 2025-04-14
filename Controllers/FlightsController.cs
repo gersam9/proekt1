@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.DotNet.Scaffolding.Shared.Messaging;
@@ -25,12 +26,19 @@ namespace proekt1.Controllers
 
         // GET: Flights
         [AllowAnonymous]
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchTerm)
         {
             //if(User.IsInRole("admin") || User.IsInRole("emoloyee"))
             //{
-                var proekt1Context = _context.Flight.Include(f => f.Plane);
-                return View(await proekt1Context.ToListAsync());
+            var flights = from n in _context.Flight.Include(f => f.Plane) select n; // Get all notes
+
+            if (!string.IsNullOrEmpty(searchTerm))
+            {
+                flights = flights.Where(n => n.StartLocation.Contains(searchTerm) || n.EndLocation.Contains(searchTerm) || n.StartDateTime.ToString().Contains(searchTerm) || n.EndDateTime.ToString().Contains(searchTerm));
+            }
+            ViewData["SearchTerm"] = searchTerm;
+            //var proekt1Context = _context.Flight.Include(f => f.Plane);
+                return View(await flights.ToListAsync());
             //}
             //else
             //{
